@@ -19,6 +19,10 @@ namespace MessageBoard.Controllers
     {
       _db = db;
     }
+      private bool MessageExists(int id)
+    {
+      return _db.Messages.Any(m => m.MessageId == id);
+    }
     // POST METHODS
     [HttpPost]
     public async Task<ActionResult<Message>> Post(Message message)
@@ -48,9 +52,45 @@ namespace MessageBoard.Controllers
     }
 
     // PUT METHODS
-
-
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Put(int id, Message message)
+    {
+      if (id != message.MessageId)
+      {
+        return BadRequest();
+      }
+      _db.Entry(message).State = EntityState.Modified;
+      try
+      {
+        await _db.SaveChangesAsync();
+      }
+      catch (DbUpdateConcurrencyException)
+      {
+        if (!MessageExists(id))
+        {
+          return NotFound();
+        }
+        else
+        {
+          throw;
+        }
+      }
+      return NoContent();
+      }
 
     //DELETE METHODS
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteMessage(int id)
+    {
+      var message = await _db.Messages.FindAsync(id);
+      if (message == null)
+      {
+        return NotFound();
+      }
+      _db.Messages.Remove(message);
+      await _db.SaveChangesAsync();
+
+      return NoContent();
+    }
   }
 }
