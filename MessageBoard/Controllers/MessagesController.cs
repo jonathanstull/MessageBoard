@@ -35,9 +35,22 @@ namespace MessageBoard.Controllers
 
     // GET METHODS
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Message>>> Get()
+    public async Task<ActionResult<IEnumerable<Message>>> Get(string author, DateTime createdAt)
     {
-      return await _db.Messages.ToListAsync();
+      var query = _db.Messages.AsQueryable();
+
+      if (author != null)
+      {
+        query = query.Where(entry => entry.Author == author);
+      }
+
+      // adjust the DateTime format
+      if (createdAt != null)
+      {
+        query = query.Where(entry => entry.CreatedAt == createdAt);
+      }
+      
+      return await query.ToListAsync();
     }
 
     [HttpGet("{id}")]
