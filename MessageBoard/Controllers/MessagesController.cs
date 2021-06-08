@@ -39,9 +39,6 @@ namespace MessageBoard.Controllers
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Message>>> Get(string author, string createdAt)
     {
-      // createdAt = "2008/05/01"
-      
-     
       var query = _db.Messages.AsQueryable();
 
       if (author != null)
@@ -49,7 +46,6 @@ namespace MessageBoard.Controllers
         query = query.Where(entry => entry.Author == author);
       }
 
-      // adjust the DateTime format
       if (createdAt != null)
       {
         DateTime createdAtDate = DateTime.Parse(createdAt);
@@ -62,7 +58,6 @@ namespace MessageBoard.Controllers
         {
           query = query.Where(entry => entry.CreatedAt.Month == createdAtDate.Month && entry.CreatedAt.Day == createdAtDate.Day && entry.CreatedAt.Year == createdAtDate.Year);
         }
-        
       }
       
       return await query.ToListAsync();
