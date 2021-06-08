@@ -23,6 +23,8 @@ namespace MessageBoard.Controllers
     {
       return _db.Messages.Any(m => m.MessageId == id);
     }
+    private string ConvertToStringDate(DateTime d) => d.ToShortDateString();
+
     // POST METHODS
     [HttpPost]
     public async Task<ActionResult<Message>> Post(Message message)
@@ -35,8 +37,11 @@ namespace MessageBoard.Controllers
 
     // GET METHODS
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Message>>> Get(string author, DateTime createdAt)
+    public async Task<ActionResult<IEnumerable<Message>>> Get(string author, string createdAt)
     {
+      // createdAt = "2008/05/01"
+      
+     
       var query = _db.Messages.AsQueryable();
 
       if (author != null)
@@ -47,11 +52,23 @@ namespace MessageBoard.Controllers
       // adjust the DateTime format
       if (createdAt != null)
       {
-        query = query.Where(entry => entry.CreatedAt == createdAt);
+        DateTime createdAtDate = DateTime.Parse(createdAt);
+        Console.WriteLine($"-------createdAtHour: {createdAtDate.Hour}---------createdAtMinute: {createdAtDate.Minute}");
+        if (createdAtDate.Hour > 0 || createdAtDate.Minute > 0)
+        {
+          query = query.Where(entry => entry.CreatedAt.Month == createdAtDate.Month && entry.CreatedAt.Day == createdAtDate.Day && entry.CreatedAt.Year == createdAtDate.Year && entry.CreatedAt.Hour == createdAtDate.Hour && entry.CreatedAt.Minute == createdAtDate.Minute);
+        }
+        else
+        {
+          query = query.Where(entry => entry.CreatedAt.Month == createdAtDate.Month && entry.CreatedAt.Day == createdAtDate.Day && entry.CreatedAt.Year == createdAtDate.Year);
+        }
+        
       }
       
       return await query.ToListAsync();
     }
+
+   
 
     [HttpGet("{id}")]
     public async Task<ActionResult<Message>> GetMessage(int id)
