@@ -35,7 +35,17 @@ namespace MessageBoard.Controllers
     }
 
     // GET
-    [HttpGet]
+    [HttpGet("{id}/messages")]
+    public async Task<ActionResult<IEnumerable<Board>>> GetBoardWithMessages(int id)
+    {
+      var query = _db.Messages.AsQueryable();
+      query = query.Where(m => m.BoardId == id);
+      if (query == null)
+      {
+        return NotFound();
+      }
+      return await query.ToListAsync();
+    }
     public async Task<ActionResult<IEnumerable<Board>>> Get(string name, string descriptor, string hasMessages)
     {
       var query = _db.Boards.AsQueryable();
@@ -71,6 +81,31 @@ public async Task<ActionResult<Board>> GetBoard(int id)
       return board;
     }
     // PUT with id
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Put(int id, Board board)
+    {
+      if (id != board.BoardId)
+      {
+        return BadRequest();
+      }
+      _db.Entry(board).State = EntityState.Modified;
+      try
+      {
+        await _db.SaveChangesAsync();
+      }
+      catch (DbUpdateConcurrencyException)
+      {
+        if (!BoardExists(id))
+        {
+          return NotFound();
+        }
+        else
+        {
+          throw;
+        }
+      }
+      return NoContent();
+    }
 
     // DELETE with id
     [HttpDelete("{id}")]
