@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MessageBoard.Migrations
 {
     [DbContext(typeof(MessageBoardContext))]
-    [Migration("20210607215733_Initial")]
-    partial class Initial
+    [Migration("20210609162130_SeedData")]
+    partial class SeedData
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -18,6 +18,37 @@ namespace MessageBoard.Migrations
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 64)
                 .HasAnnotation("ProductVersion", "5.0.0");
+
+            modelBuilder.Entity("MessageBoard.Models.Board", b =>
+                {
+                    b.Property<int>("BoardId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.HasKey("BoardId");
+
+                    b.ToTable("Boards");
+
+                    b.HasData(
+                        new
+                        {
+                            BoardId = 1,
+                            Description = "A board to post about mundane things",
+                            Name = "General"
+                        },
+                        new
+                        {
+                            BoardId = 2,
+                            Description = "A board to post about sports",
+                            Name = "Sports"
+                        });
+                });
 
             modelBuilder.Entity("MessageBoard.Models.Message", b =>
                 {
@@ -27,6 +58,9 @@ namespace MessageBoard.Migrations
 
                     b.Property<string>("Author")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<int>("BoardId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Content")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
@@ -42,6 +76,8 @@ namespace MessageBoard.Migrations
 
                     b.HasKey("MessageId");
 
+                    b.HasIndex("BoardId");
+
                     b.ToTable("Messages");
 
                     b.HasData(
@@ -49,6 +85,7 @@ namespace MessageBoard.Migrations
                         {
                             MessageId = 1,
                             Author = "John",
+                            BoardId = 1,
                             Content = "How are you?",
                             CreatedAt = new DateTime(2008, 5, 1, 8, 30, 52, 0, DateTimeKind.Unspecified),
                             Edited = false,
@@ -58,6 +95,7 @@ namespace MessageBoard.Migrations
                         {
                             MessageId = 2,
                             Author = "Kwame",
+                            BoardId = 1,
                             Content = "I'm doing great, thank you",
                             CreatedAt = new DateTime(2008, 5, 1, 8, 30, 52, 0, DateTimeKind.Unspecified),
                             Edited = false,
@@ -67,6 +105,7 @@ namespace MessageBoard.Migrations
                         {
                             MessageId = 3,
                             Author = "John",
+                            BoardId = 1,
                             Content = "What day is it?",
                             CreatedAt = new DateTime(2008, 5, 1, 8, 30, 52, 0, DateTimeKind.Unspecified),
                             Edited = false,
@@ -76,6 +115,7 @@ namespace MessageBoard.Migrations
                         {
                             MessageId = 4,
                             Author = "Kwame",
+                            BoardId = 2,
                             Content = "I don't know",
                             CreatedAt = new DateTime(2008, 5, 1, 8, 30, 52, 0, DateTimeKind.Unspecified),
                             Edited = false,
@@ -85,11 +125,28 @@ namespace MessageBoard.Migrations
                         {
                             MessageId = 5,
                             Author = "John",
+                            BoardId = 2,
                             Content = "We should buy a calendar",
                             CreatedAt = new DateTime(2008, 5, 1, 8, 30, 52, 0, DateTimeKind.Unspecified),
                             Edited = false,
                             UpdatedAt = new DateTime(2008, 5, 1, 8, 30, 52, 0, DateTimeKind.Unspecified)
                         });
+                });
+
+            modelBuilder.Entity("MessageBoard.Models.Message", b =>
+                {
+                    b.HasOne("MessageBoard.Models.Board", "Board")
+                        .WithMany("Messages")
+                        .HasForeignKey("BoardId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Board");
+                });
+
+            modelBuilder.Entity("MessageBoard.Models.Board", b =>
+                {
+                    b.Navigation("Messages");
                 });
 #pragma warning restore 612, 618
         }
