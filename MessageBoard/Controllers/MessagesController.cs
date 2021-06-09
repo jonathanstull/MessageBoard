@@ -23,8 +23,7 @@ namespace MessageBoard.Controllers
     {
       return _db.Messages.Any(m => m.MessageId == id);
     }
-    private string ConvertToStringDate(DateTime d) => d.ToShortDateString();
-
+  
     // POST METHODS
     [HttpPost]
     public async Task<ActionResult<Message>> Post(Message message)
