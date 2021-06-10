@@ -68,7 +68,7 @@ namespace MessageBoard.Controllers
   
     // GET METHODS
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Message>>> Get(string author, string createdAt)
+    public async Task<ActionResult<IEnumerable<Message>>> Get(string author, string createdAt, string edited)
     {
       var query = _db.Messages.AsQueryable();
 
@@ -88,6 +88,17 @@ namespace MessageBoard.Controllers
         else
         {
           query = query.Where(entry => entry.CreatedAt.Month == createdAtDate.Month && entry.CreatedAt.Day == createdAtDate.Day && entry.CreatedAt.Year == createdAtDate.Year);
+        }
+      }
+       if (edited != null)
+      {
+        if (edited.ToLower() == "true")
+        {
+          query = query.Where(entry => entry.Edited == true);
+        }
+       if (edited.ToLower() == "false")
+        {
+          query = query.Where(entry => entry.Edited == false);
         }
       }
       
