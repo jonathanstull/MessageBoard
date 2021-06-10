@@ -21,6 +21,7 @@ namespace MessageBoard
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
+                    // configure to use specific port?
                 });
     }
 }

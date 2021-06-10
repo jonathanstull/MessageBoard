@@ -11,6 +11,7 @@ namespace MessageBoard.Controllers
 {
   [Route("api/[controller]")]
   [ApiController]
+  [Authorize]
   public class BoardsController : ControllerBase
   {
     private readonly MessageBoardContext _db;
