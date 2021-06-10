@@ -38,7 +38,6 @@ namespace MessageBoard.Controllers
     {
       
       var board = await _db.Boards.FindAsync(id);
-      Console.WriteLine($"Here: {id}");
       if (id != board.BoardId)
       {
         return BadRequest();
@@ -96,7 +95,7 @@ namespace MessageBoard.Controllers
         {
           query = query.Where(entry => entry.Edited == true);
         }
-       if (edited.ToLower() == "false")
+        if (edited.ToLower() == "false")
         {
           query = query.Where(entry => entry.Edited == false);
         }

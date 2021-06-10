@@ -61,6 +61,7 @@ public async Task<ActionResult<Board>> GetBoard(int id)
 {
       var board = await _db.Boards.Include(b => b.Messages)
       .FirstOrDefaultAsync(b => b.BoardId == id);
+      
       if (board == null)
       {
         return NotFound();
