@@ -95,9 +95,13 @@ namespace MessageBoard.Controllers
         {
           query = query.Where(entry => entry.Edited == true);
         }
-        if (edited.ToLower() == "false")
+        else if (edited.ToLower() == "false")
         {
           query = query.Where(entry => entry.Edited == false);
+        }
+        else
+        {
+          
         }
       }
       
