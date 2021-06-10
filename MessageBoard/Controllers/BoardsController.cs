@@ -33,20 +33,11 @@ namespace MessageBoard.Controllers
       await _db.SaveChangesAsync();
       return CreatedAtAction("Post", new { id = board.BoardId }, board);
     }
+     
 
     // GET
-    [HttpGet("{id}/messages")]
-    public async Task<ActionResult<IEnumerable<Board>>> GetBoardWithMessages(int id)
-    {
-      var query = _db.Messages.AsQueryable();
-      query = query.Where(m => m.BoardId == id);
-      if (query == null)
-      {
-        return NotFound();
-      }
-      return await query.ToListAsync();
-    }
-    public async Task<ActionResult<IEnumerable<Board>>> Get(string name, string descriptor, string hasMessages)
+   [HttpGet]
+    public async Task<ActionResult<IEnumerable<Board>>> Get(string name, string descriptor)
     {
       var query = _db.Boards.AsQueryable();
 
@@ -59,12 +50,7 @@ namespace MessageBoard.Controllers
       {
         query = query.Where(entry => entry.Description.Contains(descriptor));
       }
-      
-      // still returns boards when Messages = null
-      if (hasMessages != null)
-      {
-        query = query.Where(entry => entry.Messages != null || entry.Messages.Count > 0);
-      }
+      query.Include(entity => entity.Messages);
 
       return await query.ToListAsync();
     }
@@ -73,13 +59,16 @@ namespace MessageBoard.Controllers
     [HttpGet("{id}")]
 public async Task<ActionResult<Board>> GetBoard(int id)
 {
-      var board = await _db.Boards.FindAsync(id);
+      var board = await _db.Boards.Include(b => b.Messages)
+      .FirstOrDefaultAsync(b => b.BoardId == id);
       if (board == null)
       {
         return NotFound();
       }
+
       return board;
     }
+    
     // PUT with id
     [HttpPut("{id}")]
     public async Task<IActionResult> Put(int id, Board board)

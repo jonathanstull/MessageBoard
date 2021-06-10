@@ -5,11 +5,14 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+
+using System.Runtime.Serialization.Json;
 using MessageBoard.Models;
 
 namespace MessageBoard.Controllers
 {
-  [Route("api/[controller]")]
+  [Route("api/boards/{id}/[controller]")]
   [ApiController]
   public class MessagesController : ControllerBase
   {
@@ -19,21 +22,50 @@ namespace MessageBoard.Controllers
     {
       _db = db;
     }
+
+    private bool BoardExists(int id)
+    {
+      return _db.Boards.Any(b => b.BoardId == id);
+    }
       private bool MessageExists(int id)
     {
       return _db.Messages.Any(m => m.MessageId == id);
     }
-  
+
     // POST METHODS
     [HttpPost]
-    public async Task<ActionResult<Message>> Post(Message message)
+    public async Task<ActionResult<Message>> Post(int id, Message message)
     {
-      _db.Messages.Add(message);
-      await _db.SaveChangesAsync();
+      
+      var board = await _db.Boards.FindAsync(id);
+      Console.WriteLine($"Here: {id}");
+      if (id != board.BoardId)
+      {
+        return BadRequest();
+      }
+      _db.Entry(board).State = EntityState.Modified;
+      message.BoardId = id;
+      _db.Messages.Update(message);
+      try
+      {
+        await _db.SaveChangesAsync();
+      }
+      catch (DbUpdateConcurrencyException)
+      {
+        if (!BoardExists(message.BoardId))
+        {
+          return NotFound();
+        }
+        else
+        {
+          throw;
+        }
+      }
+
       return CreatedAtAction("Post", new { id = message.MessageId }, message);
 
     }
-
+  
     // GET METHODS
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Message>>> Get(string author, string createdAt)
@@ -64,10 +96,10 @@ namespace MessageBoard.Controllers
 
    
 
-    [HttpGet("{id}")]
-    public async Task<ActionResult<Message>> GetMessage(int id)
+    [HttpGet("{messageId}")]
+    public async Task<ActionResult<Message>> GetMessage(int messageId)
     {
-      var message = await _db.Messages.FindAsync(id);
+      var message = await _db.Messages.FindAsync(messageId);
       if (message == null)
       {
         return NotFound();
@@ -76,10 +108,10 @@ namespace MessageBoard.Controllers
     }
 
     // PUT METHODS
-    [HttpPut("{id}")]
-    public async Task<IActionResult> Put(int id, Message message)
+    [HttpPut("{messageId}")]
+    public async Task<IActionResult> Put(int messageId, Message message)
     {
-      if (id != message.MessageId)
+      if (messageId != message.MessageId)
       {
         return BadRequest();
       }
@@ -90,7 +122,7 @@ namespace MessageBoard.Controllers
       }
       catch (DbUpdateConcurrencyException)
       {
-        if (!MessageExists(id))
+        if (!MessageExists(messageId))
         {
           return NotFound();
         }
@@ -103,10 +135,10 @@ namespace MessageBoard.Controllers
       }
 
     //DELETE METHODS
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteMessage(int id)
+    [HttpDelete("{messageId}")]
+    public async Task<IActionResult> DeleteMessage(int messageId)
     {
-      var message = await _db.Messages.FindAsync(id);
+      var message = await _db.Messages.FindAsync(messageId);
       if (message == null)
       {
         return NotFound();

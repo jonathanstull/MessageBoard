@@ -1,7 +1,6 @@
 using System;
-using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 using System.ComponentModel.DataAnnotations.Schema;
-
 namespace MessageBoard.Models
 {
   public class Message
@@ -13,8 +12,8 @@ namespace MessageBoard.Models
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
     public bool Edited { get; set; }
-
+    [ForeignKey("Board")]
     public int BoardId { get; set; }
-    public Board Board { get; set; }
+    public  Board Board { get; set; }
   }
 }

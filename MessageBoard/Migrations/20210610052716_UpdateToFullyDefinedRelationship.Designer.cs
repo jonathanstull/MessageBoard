@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MessageBoard.Migrations
 {
     [DbContext(typeof(MessageBoardContext))]
-    [Migration("20210609161946_OneToMany")]
-    partial class OneToMany
+    [Migration("20210610052716_UpdateToFullyDefinedRelationship")]
+    partial class UpdateToFullyDefinedRelationship
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -34,6 +34,14 @@ namespace MessageBoard.Migrations
                     b.HasKey("BoardId");
 
                     b.ToTable("Boards");
+
+                    b.HasData(
+                        new
+                        {
+                            BoardId = 1,
+                            Description = "This is a general board",
+                            Name = "General"
+                        });
                 });
 
             modelBuilder.Entity("MessageBoard.Models.Message", b =>
@@ -65,6 +73,18 @@ namespace MessageBoard.Migrations
                     b.HasIndex("BoardId");
 
                     b.ToTable("Messages");
+
+                    b.HasData(
+                        new
+                        {
+                            MessageId = 1,
+                            Author = "John Doe",
+                            BoardId = 1,
+                            Content = "I belong to general!",
+                            CreatedAt = new DateTime(2021, 6, 9, 22, 27, 16, 463, DateTimeKind.Local).AddTicks(1450),
+                            Edited = false,
+                            UpdatedAt = new DateTime(2021, 6, 9, 22, 27, 16, 463, DateTimeKind.Local).AddTicks(1530)
+                        });
                 });
 
             modelBuilder.Entity("MessageBoard.Models.Message", b =>

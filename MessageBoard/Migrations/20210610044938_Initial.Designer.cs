@@ -3,14 +3,16 @@ using System;
 using MessageBoard.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace MessageBoard.Migrations
 {
     [DbContext(typeof(MessageBoardContext))]
-    partial class MessageBoardContextModelSnapshot : ModelSnapshot
+    [Migration("20210610044938_Initial")]
+    partial class Initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -32,14 +34,6 @@ namespace MessageBoard.Migrations
                     b.HasKey("BoardId");
 
                     b.ToTable("Boards");
-
-                    b.HasData(
-                        new
-                        {
-                            BoardId = 1,
-                            Description = "This is a general board",
-                            Name = "General"
-                        });
                 });
 
             modelBuilder.Entity("MessageBoard.Models.Message", b =>
@@ -71,18 +65,6 @@ namespace MessageBoard.Migrations
                     b.HasIndex("BoardId");
 
                     b.ToTable("Messages");
-
-                    b.HasData(
-                        new
-                        {
-                            MessageId = 1,
-                            Author = "John Doe",
-                            BoardId = 1,
-                            Content = "I belong to general!",
-                            CreatedAt = new DateTime(2021, 6, 9, 23, 14, 52, 394, DateTimeKind.Local).AddTicks(6670),
-                            Edited = false,
-                            UpdatedAt = new DateTime(2021, 6, 9, 23, 14, 52, 394, DateTimeKind.Local).AddTicks(6730)
-                        });
                 });
 
             modelBuilder.Entity("MessageBoard.Models.Message", b =>

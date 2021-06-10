@@ -3,14 +3,16 @@ using System;
 using MessageBoard.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace MessageBoard.Migrations
 {
     [DbContext(typeof(MessageBoardContext))]
-    partial class MessageBoardContextModelSnapshot : ModelSnapshot
+    [Migration("20210610051320_SeedData")]
+    partial class SeedData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -79,9 +81,9 @@ namespace MessageBoard.Migrations
                             Author = "John Doe",
                             BoardId = 1,
                             Content = "I belong to general!",
-                            CreatedAt = new DateTime(2021, 6, 9, 23, 14, 52, 394, DateTimeKind.Local).AddTicks(6670),
+                            CreatedAt = new DateTime(2021, 6, 9, 22, 13, 19, 596, DateTimeKind.Local).AddTicks(3300),
                             Edited = false,
-                            UpdatedAt = new DateTime(2021, 6, 9, 23, 14, 52, 394, DateTimeKind.Local).AddTicks(6730)
+                            UpdatedAt = new DateTime(2021, 6, 9, 22, 13, 19, 596, DateTimeKind.Local).AddTicks(3390)
                         });
                 });
 

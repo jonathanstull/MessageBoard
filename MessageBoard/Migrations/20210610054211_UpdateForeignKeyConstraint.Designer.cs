@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MessageBoard.Migrations
 {
     [DbContext(typeof(MessageBoardContext))]
-    [Migration("20210609162130_SeedData")]
-    partial class SeedData
+    [Migration("20210610054211_UpdateForeignKeyConstraint")]
+    partial class UpdateForeignKeyConstraint
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -39,14 +39,8 @@ namespace MessageBoard.Migrations
                         new
                         {
                             BoardId = 1,
-                            Description = "A board to post about mundane things",
+                            Description = "This is a general board",
                             Name = "General"
-                        },
-                        new
-                        {
-                            BoardId = 2,
-                            Description = "A board to post about sports",
-                            Name = "Sports"
                         });
                 });
 
@@ -84,52 +78,12 @@ namespace MessageBoard.Migrations
                         new
                         {
                             MessageId = 1,
-                            Author = "John",
+                            Author = "John Doe",
                             BoardId = 1,
-                            Content = "How are you?",
-                            CreatedAt = new DateTime(2008, 5, 1, 8, 30, 52, 0, DateTimeKind.Unspecified),
+                            Content = "I belong to general!",
+                            CreatedAt = new DateTime(2021, 6, 9, 22, 42, 11, 229, DateTimeKind.Local).AddTicks(660),
                             Edited = false,
-                            UpdatedAt = new DateTime(2008, 5, 1, 8, 30, 52, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            MessageId = 2,
-                            Author = "Kwame",
-                            BoardId = 1,
-                            Content = "I'm doing great, thank you",
-                            CreatedAt = new DateTime(2008, 5, 1, 8, 30, 52, 0, DateTimeKind.Unspecified),
-                            Edited = false,
-                            UpdatedAt = new DateTime(2008, 5, 1, 8, 30, 52, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            MessageId = 3,
-                            Author = "John",
-                            BoardId = 1,
-                            Content = "What day is it?",
-                            CreatedAt = new DateTime(2008, 5, 1, 8, 30, 52, 0, DateTimeKind.Unspecified),
-                            Edited = false,
-                            UpdatedAt = new DateTime(2008, 5, 1, 8, 30, 52, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            MessageId = 4,
-                            Author = "Kwame",
-                            BoardId = 2,
-                            Content = "I don't know",
-                            CreatedAt = new DateTime(2008, 5, 1, 8, 30, 52, 0, DateTimeKind.Unspecified),
-                            Edited = false,
-                            UpdatedAt = new DateTime(2008, 5, 1, 8, 30, 52, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            MessageId = 5,
-                            Author = "John",
-                            BoardId = 2,
-                            Content = "We should buy a calendar",
-                            CreatedAt = new DateTime(2008, 5, 1, 8, 30, 52, 0, DateTimeKind.Unspecified),
-                            Edited = false,
-                            UpdatedAt = new DateTime(2008, 5, 1, 8, 30, 52, 0, DateTimeKind.Unspecified)
+                            UpdatedAt = new DateTime(2021, 6, 9, 22, 42, 11, 229, DateTimeKind.Local).AddTicks(730)
                         });
                 });
 
